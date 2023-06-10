@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha256-HtsXJanqjKTc8vVQjO4YMhiqFoXkfBsjBWcX91T1jr8=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"jackwong7.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.17.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="首先去官网下载资源链接：Froala编辑器介绍网页">
+<meta property="og:type" content="article">
+<meta property="og:title" content="beego加入Froala富文本编辑器">
+<meta property="og:url" content="https://jackwong7.github.io/2020/07/14/beego%E5%8A%A0%E5%85%A5Froala%E5%AF%8C%E6%96%87%E6%9C%AC%E7%BC%96%E8%BE%91%E5%99%A8/index.html">
+<meta property="og:site_name" content="JW-BLOG">
+<meta property="og:description" content="首先去官网下载资源链接：Froala编辑器介绍网页">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://jackwong7.github.io/beego%E5%8A%A0%E5%85%A5Froala%E5%AF%8C%E6%96%87%E6%9C%AC%E7%BC%96%E8%BE%91%E5%99%A8/f8875b16e97c092a67826dc0c6650feb.png">
+<meta property="og:image" content="https://jackwong7.github.io/beego%E5%8A%A0%E5%85%A5Froala%E5%AF%8C%E6%96%87%E6%9C%AC%E7%BC%96%E8%BE%91%E5%99%A8/383c9b755e5ef7779480f0079d407ce0.png">
+<meta property="article:published_time" content="2020-07-14T08:54:36.000Z">
+<meta property="article:modified_time" content="2023-06-10T09:26:16.633Z">
+<meta property="article:author" content="Jack Wong">
+<meta property="article:tag" content="Golang">
+<meta property="article:tag" content="Beego">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://jackwong7.github.io/beego%E5%8A%A0%E5%85%A5Froala%E5%AF%8C%E6%96%87%E6%9C%AC%E7%BC%96%E8%BE%91%E5%99%A8/f8875b16e97c092a67826dc0c6650feb.png">
+
+
+<link rel="canonical" href="https://jackwong7.github.io/2020/07/14/beego%E5%8A%A0%E5%85%A5Froala%E5%AF%8C%E6%96%87%E6%9C%AC%E7%BC%96%E8%BE%91%E5%99%A8/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://jackwong7.github.io/2020/07/14/beego%E5%8A%A0%E5%85%A5Froala%E5%AF%8C%E6%96%87%E6%9C%AC%E7%BC%96%E8%BE%91%E5%99%A8/","path":"2020/07/14/beego加入Froala富文本编辑器/","title":"beego加入Froala富文本编辑器"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>beego加入Froala富文本编辑器 | JW-BLOG</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">JW-BLOG</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">JW</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%A6%96%E5%85%88%E5%8E%BB%E5%AE%98%E7%BD%91%E4%B8%8B%E8%BD%BD%E8%B5%84%E6%BA%90"><span class="nav-number">1.</span> <span class="nav-text">首先去官网下载资源</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%B0%86css%EF%BC%8Cjs%E5%BC%95%E5%85%A5%E5%88%B0%E9%A1%B9%E7%9B%AE%E4%B8%AD%EF%BC%8C%E6%88%91%E8%BF%99%E9%87%8C%E6%98%AF%E6%8A%8A%E6%89%80%E6%9C%89%E7%9A%84css%EF%BC%8Cjs%E9%83%BD%E5%BC%95%E5%85%A5%E4%BA%86"><span class="nav-number">2.</span> <span class="nav-text">将css，js引入到项目中，我这里是把所有的css，js都引入了</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%B7%BB%E5%8A%A0%E5%AF%8C%E6%96%87%E6%9C%AChtml%E5%8C%BA%E5%9F%9F%E5%9D%97"><span class="nav-number">3.</span> <span class="nav-text">添加富文本html区域块</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE%E5%AF%8C%E6%96%87%E6%9C%AC%E5%8A%9F%E8%83%BD"><span class="nav-number">4.</span> <span class="nav-text">配置富文本功能</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%8A%E4%BC%A0%E5%9B%BE%E7%89%87%E5%88%B0%E5%90%8E%E7%AB%AF"><span class="nav-number">5.</span> <span class="nav-text">上传图片到后端</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%88%91%E7%94%A8%E5%88%B0%E7%9A%84css"><span class="nav-number">6.</span> <span class="nav-text">我用到的css</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9C%80%E7%BB%88%E6%95%88%E6%9E%9C%E5%9B%BE"><span class="nav-number">7.</span> <span class="nav-text">最终效果图</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Jack Wong</p>
+  <div class="site-description" itemprop="description">This is my blog</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">29</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">20</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://jackwong7.github.io/2020/07/14/beego%E5%8A%A0%E5%85%A5Froala%E5%AF%8C%E6%96%87%E6%9C%AC%E7%BC%96%E8%BE%91%E5%99%A8/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Jack Wong">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="JW-BLOG">
+      <meta itemprop="description" content="This is my blog">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="beego加入Froala富文本编辑器 | JW-BLOG">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          beego加入Froala富文本编辑器
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2020-07-14 16:54:36" itemprop="dateCreated datePublished" datetime="2020-07-14T16:54:36+08:00">2020-07-14</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2023-06-10 17:26:16" itemprop="dateModified" datetime="2023-06-10T17:26:16+08:00">2023-06-10</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h4 id="首先去官网下载资源"><a href="#首先去官网下载资源" class="headerlink" title="首先去官网下载资源"></a>首先去官网下载资源</h4><p>链接：<a target="_blank" rel="noopener" href="https://froala.com/wysiwyg-editor/">Froala编辑器介绍网页</a></p>
+<span id="more"></span>
+
+<p><img src="/beego%E5%8A%A0%E5%85%A5Froala%E5%AF%8C%E6%96%87%E6%9C%AC%E7%BC%96%E8%BE%91%E5%99%A8/f8875b16e97c092a67826dc0c6650feb.png" alt="img"></p>
+<h4 id="将css，js引入到项目中，我这里是把所有的css，js都引入了"><a href="#将css，js引入到项目中，我这里是把所有的css，js都引入了" class="headerlink" title="将css，js引入到项目中，我这里是把所有的css，js都引入了"></a>将css，js引入到项目中，我这里是把所有的css，js都引入了</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line">&lt;link rel=&quot;stylesheet&quot; href=&quot;/static/froala_editor_3.1.1/css/froala_editor.css&quot;&gt;</span><br><span class="line">&lt;link rel=&quot;stylesheet&quot; href=&quot;/static/froala_editor_3.1.1/css/froala_style.css&quot;&gt;</span><br><span class="line">&lt;link rel=&quot;stylesheet&quot; href=&quot;/static/froala_editor_3.1.1/css/plugins/code_view.css&quot;&gt;</span><br><span class="line">&lt;link rel=&quot;stylesheet&quot; href=&quot;/static/froala_editor_3.1.1/css/plugins/draggable.css&quot;&gt;</span><br><span class="line">&lt;link rel=&quot;stylesheet&quot; href=&quot;/static/froala_editor_3.1.1/css/plugins/colors.css&quot;&gt;</span><br><span class="line">&lt;link rel=&quot;stylesheet&quot; href=&quot;/static/froala_editor_3.1.1/css/plugins/emoticons.css&quot;&gt;</span><br><span class="line">&lt;link rel=&quot;stylesheet&quot; href=&quot;/static/froala_editor_3.1.1/css/plugins/image_manager.css&quot;&gt;</span><br><span class="line">&lt;link rel=&quot;stylesheet&quot; href=&quot;/static/froala_editor_3.1.1/css/plugins/image.css&quot;&gt;</span><br><span class="line">&lt;link rel=&quot;stylesheet&quot; href=&quot;/static/froala_editor_3.1.1/css/plugins/line_breaker.css&quot;&gt;</span><br><span class="line">&lt;link rel=&quot;stylesheet&quot; href=&quot;/static/froala_editor_3.1.1/css/plugins/table.css&quot;&gt;</span><br><span class="line">&lt;link rel=&quot;stylesheet&quot; href=&quot;/static/froala_editor_3.1.1/css/plugins/char_counter.css&quot;&gt;</span><br><span class="line">&lt;link rel=&quot;stylesheet&quot; href=&quot;/static/froala_editor_3.1.1/css/plugins/video.css&quot;&gt;</span><br><span class="line">&lt;link rel=&quot;stylesheet&quot; href=&quot;/static/froala_editor_3.1.1/css/plugins/fullscreen.css&quot;&gt;</span><br><span class="line">&lt;link rel=&quot;stylesheet&quot; href=&quot;/static/froala_editor_3.1.1/css/plugins/file.css&quot;&gt;</span><br><span class="line">&lt;link rel=&quot;stylesheet&quot; href=&quot;/static/froala_editor_3.1.1/css/plugins/quick_insert.css&quot;&gt;</span><br><span class="line">&lt;link rel=&quot;stylesheet&quot; href=&quot;/static/froala_editor_3.1.1/css/plugins/help.css&quot;&gt;</span><br><span class="line">&lt;link rel=&quot;stylesheet&quot; href=&quot;/static/froala_editor_3.1.1/css/third_party/spell_checker.css&quot;&gt;</span><br><span class="line">&lt;link rel=&quot;stylesheet&quot; href=&quot;/static/froala_editor_3.1.1/css/plugins/special_characters.css&quot;&gt;</span><br><span class="line">&lt;script type=&quot;text/javascript&quot; src=&quot;/static/froala_editor_3.1.1/js/froala_editor.min.js&quot;&gt;&lt;/script&gt;</span><br><span class="line">&lt;script type=&quot;text/javascript&quot; src=&quot;/static/froala_editor_3.1.1/js/plugins/align.min.js&quot;&gt;&lt;/script&gt;</span><br><span class="line">&lt;script type=&quot;text/javascript&quot; src=&quot;/static/froala_editor_3.1.1/js/plugins/char_counter.min.js&quot;&gt;&lt;/script&gt;</span><br><span class="line">&lt;script type=&quot;text/javascript&quot; src=&quot;/static/froala_editor_3.1.1/js/plugins/code_beautifier.min.js&quot;&gt;&lt;/script&gt;</span><br><span class="line">&lt;script type=&quot;text/javascript&quot; src=&quot;/static/froala_editor_3.1.1/js/plugins/code_view.min.js&quot;&gt;&lt;/script&gt;</span><br><span class="line">&lt;script type=&quot;text/javascript&quot; src=&quot;/static/froala_editor_3.1.1/js/plugins/colors.min.js&quot;&gt;&lt;/script&gt;</span><br><span class="line">&lt;script type=&quot;text/javascript&quot; src=&quot;/static/froala_editor_3.1.1/js/plugins/draggable.min.js&quot;&gt;&lt;/script&gt;</span><br><span class="line">&lt;script type=&quot;text/javascript&quot; src=&quot;/static/froala_editor_3.1.1/js/plugins/emoticons.min.js&quot;&gt;&lt;/script&gt;</span><br><span class="line">&lt;script type=&quot;text/javascript&quot; src=&quot;/static/froala_editor_3.1.1/js/plugins/entities.min.js&quot;&gt;&lt;/script&gt;</span><br><span class="line">&lt;script type=&quot;text/javascript&quot; src=&quot;/static/froala_editor_3.1.1/js/plugins/file.min.js&quot;&gt;&lt;/script&gt;</span><br><span class="line">&lt;script type=&quot;text/javascript&quot; src=&quot;/static/froala_editor_3.1.1/js/plugins/font_size.min.js&quot;&gt;&lt;/script&gt;</span><br><span class="line">&lt;script type=&quot;text/javascript&quot; src=&quot;/static/froala_editor_3.1.1/js/plugins/font_family.min.js&quot;&gt;&lt;/script&gt;</span><br><span class="line">&lt;script type=&quot;text/javascript&quot; src=&quot;/static/froala_editor_3.1.1/js/plugins/fullscreen.min.js&quot;&gt;&lt;/script&gt;</span><br><span class="line">&lt;script type=&quot;text/javascript&quot; src=&quot;/static/froala_editor_3.1.1/js/plugins/image.min.js&quot;&gt;&lt;/script&gt;</span><br><span class="line">&lt;script type=&quot;text/javascript&quot; src=&quot;/static/froala_editor_3.1.1/js/plugins/image_manager.min.js&quot;&gt;&lt;/script&gt;</span><br><span class="line">&lt;script type=&quot;text/javascript&quot; src=&quot;/static/froala_editor_3.1.1/js/plugins/line_breaker.min.js&quot;&gt;&lt;/script&gt;</span><br><span class="line">&lt;script type=&quot;text/javascript&quot; src=&quot;/static/froala_editor_3.1.1/js/plugins/inline_style.min.js&quot;&gt;&lt;/script&gt;</span><br><span class="line">&lt;script type=&quot;text/javascript&quot; src=&quot;/static/froala_editor_3.1.1/js/plugins/link.min.js&quot;&gt;&lt;/script&gt;</span><br><span class="line">&lt;script type=&quot;text/javascript&quot; src=&quot;/static/froala_editor_3.1.1/js/plugins/lists.min.js&quot;&gt;&lt;/script&gt;</span><br><span class="line">&lt;script type=&quot;text/javascript&quot; src=&quot;/static/froala_editor_3.1.1/js/plugins/paragraph_format.min.js&quot;&gt;&lt;/script&gt;</span><br><span class="line">&lt;script type=&quot;text/javascript&quot; src=&quot;/static/froala_editor_3.1.1/js/plugins/paragraph_style.min.js&quot;&gt;&lt;/script&gt;</span><br><span class="line">&lt;script type=&quot;text/javascript&quot; src=&quot;/static/froala_editor_3.1.1/js/plugins/quick_insert.min.js&quot;&gt;&lt;/script&gt;</span><br><span class="line">&lt;script type=&quot;text/javascript&quot; src=&quot;/static/froala_editor_3.1.1/js/plugins/quote.min.js&quot;&gt;&lt;/script&gt;</span><br><span class="line">&lt;script type=&quot;text/javascript&quot; src=&quot;/static/froala_editor_3.1.1/js/plugins/table.min.js&quot;&gt;&lt;/script&gt;</span><br><span class="line">&lt;script type=&quot;text/javascript&quot; src=&quot;/static/froala_editor_3.1.1/js/plugins/save.min.js&quot;&gt;&lt;/script&gt;</span><br><span class="line">&lt;script type=&quot;text/javascript&quot; src=&quot;/static/froala_editor_3.1.1/js/plugins/url.min.js&quot;&gt;&lt;/script&gt;</span><br><span class="line">&lt;script type=&quot;text/javascript&quot; src=&quot;/static/froala_editor_3.1.1/js/plugins/video.min.js&quot;&gt;&lt;/script&gt;</span><br><span class="line">&lt;script type=&quot;text/javascript&quot; src=&quot;/static/froala_editor_3.1.1/js/plugins/help.min.js&quot;&gt;&lt;/script&gt;</span><br><span class="line">&lt;script type=&quot;text/javascript&quot; src=&quot;/static/froala_editor_3.1.1/js/plugins/print.min.js&quot;&gt;&lt;/script&gt;</span><br><span class="line">&lt;script type=&quot;text/javascript&quot; src=&quot;/static/froala_editor_3.1.1/js/third_party/spell_checker.min.js&quot;&gt;&lt;/script&gt;</span><br><span class="line">&lt;script type=&quot;text/javascript&quot; src=&quot;/static/froala_editor_3.1.1/js/plugins/special_characters.min.js&quot;&gt;&lt;/script&gt;</span><br><span class="line">&lt;script type=&quot;text/javascript&quot; src=&quot;/static/froala_editor_3.1.1/js/plugins/word_paste.min.js&quot;&gt;&lt;/script&gt;</span><br><span class="line">&lt;script type=&quot;text/javascript&quot; src=&quot;/static/froala_editor_3.1.1/js/languages/zh_cn.js&quot;&gt;&lt;/script&gt;</span><br></pre></td></tr></table></figure>
+
+<h4 id="添加富文本html区域块"><a href="#添加富文本html区域块" class="headerlink" title="添加富文本html区域块"></a>添加富文本html区域块</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;div id=&quot;editor&quot;&gt;</span><br><span class="line">    &lt;textarea id=&#x27;edit&#x27; name=&quot;content&quot; style=&quot;margin-top: 30px;&quot;&gt;&#123;&#123;.post.Content&#125;&#125;&lt;/textarea&gt;</span><br><span class="line">&lt;/div&gt;</span><br></pre></td></tr></table></figure>
+
+<h4 id="配置富文本功能"><a href="#配置富文本功能" class="headerlink" title="配置富文本功能"></a>配置富文本功能</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br></pre></td><td class="code"><pre><span class="line">&lt;script&gt;</span><br><span class="line">(function () &#123;</span><br><span class="line">    //这个是我自定义的按钮，用来添加代码区块的</span><br><span class="line">    FroalaEditor.DefineIcon(&#x27;insertCode&#x27;, &#123; NAME: &#x27;plus&#x27;, SVG_KEY: &#x27;add&#x27; &#125;);</span><br><span class="line">    FroalaEditor.RegisterCommand(&#x27;insertCode&#x27;, &#123;</span><br><span class="line">        title: &#x27;插入代码&#x27;,</span><br><span class="line">        focus: true,</span><br><span class="line">        undo: true,</span><br><span class="line">        type:&#x27;dropdown&#x27;,</span><br><span class="line">        refreshAfterCallback: true,</span><br><span class="line">            options: &#123;</span><br><span class="line">              &#x27;bash&#x27;: &#x27;bash&#x27;,</span><br><span class="line">              &#x27;php&#x27;: &#x27;php&#x27;,</span><br><span class="line">              &#x27;golang&#x27;: &#x27;golang&#x27;,</span><br><span class="line">              &#x27;sql&#x27;: &#x27;sql&#x27;,</span><br><span class="line">              &#x27;html&#x27;: &#x27;html&#x27;,</span><br><span class="line">              &#x27;css&#x27;: &#x27;css&#x27;,</span><br><span class="line">              &#x27;java&#x27;: &#x27;java&#x27;,</span><br><span class="line">            &#125;,</span><br><span class="line">        callback: function (cmd,val) &#123;</span><br><span class="line">            let txt = this.selection.text();</span><br><span class="line">            if (txt === undefined) return;</span><br><span class="line">            code = txt.replace(/\s+$/, &quot;&quot;); // rtrim</span><br><span class="line">            code = $(&#x27;&lt;span/&gt;&#x27;).text(code).html(); // encode</span><br><span class="line"></span><br><span class="line">            var htmlCode = &quot;&lt;pre language=&#x27;&quot; + val + &quot;&#x27; class=&#x27;code&#x27;&gt;&quot; + code + &quot;&lt;/pre&gt;&lt;/div&gt;&quot;;</span><br><span class="line">            var codeBlock = &quot;&lt;div align=&#x27;left&#x27; dir=&#x27;ltr&#x27;&gt;&quot; + htmlCode + &quot;&lt;/div&gt;&lt;br/&gt;&quot;;</span><br><span class="line"></span><br><span class="line">            this.html.insert(codeBlock);</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">    //自定义区块--end</span><br><span class="line">    new FroalaEditor(&quot;#edit&quot;,&#123;</span><br><span class="line">        key: &#x27;&#x27;,</span><br><span class="line">        language: &#x27;zh_cn&#x27;,</span><br><span class="line">        height: 300,</span><br><span class="line"></span><br><span class="line">        // disable quick insert</span><br><span class="line">        quickInsertTags: [],</span><br><span class="line"></span><br><span class="line">        //需要按钮可以参考这几个</span><br><span class="line">        //&#123;moreText:&#123;buttons:</span><br><span class="line">        //[&quot;bold&quot;,&quot;italic&quot;,&quot;underline&quot;,&quot;strikeThrough&quot;,&quot;subscript&quot;,&quot;superscript&quot;,&quot;fontFamily&quot;,&quot;fontSize&quot;,&quot;textColor&quot;,&quot;backgroundColor&quot;,&quot;inlineClass&quot;,&quot;inlineStyle&quot;,&quot;clearFormatting&quot;]</span><br><span class="line">        //&#125;,moreParagraph:&#123;buttons:</span><br><span class="line">        //[&quot;alignLeft&quot;,&quot;alignCenter&quot;,&quot;formatOLSimple&quot;,&quot;alignRight&quot;,&quot;alignJustify&quot;,&quot;formatOL&quot;,&quot;formatUL&quot;,&quot;paragraphFormat&quot;,&quot;paragraphStyle&quot;,&quot;lineHeight&quot;,&quot;outdent&quot;,&quot;indent&quot;,&quot;quote&quot;]</span><br><span class="line">        //&#125;,moreRich:&#123;buttons:</span><br><span class="line">        //[&quot;insertLink&quot;,&quot;insertImage&quot;,&quot;insertVideo&quot;,&quot;insertTable&quot;,&quot;emoticons&quot;,&quot;fontAwesome&quot;,&quot;specialCharacters&quot;,&quot;embedly&quot;,&quot;insertFile&quot;,&quot;insertHR&quot;]</span><br><span class="line">        //&#125;,moreMisc:&#123;buttons:</span><br><span class="line">        //[&quot;undo&quot;,&quot;redo&quot;,&quot;fullscreen&quot;,&quot;print&quot;,&quot;getPDF&quot;,&quot;spellChecker&quot;,&quot;selectAll&quot;,&quot;html&quot;,&quot;help&quot;]</span><br><span class="line">        //,align:&quot;right&quot;,buttonsVisible:2&#125;&#125;</span><br><span class="line"></span><br><span class="line">        // toolbar buttons</span><br><span class="line">        toolbarButtons: [&#x27;fullscreen&#x27;, &#x27;textColor&#x27;,&#x27;fontFamily&#x27;,&#x27;backgroundColor&#x27;,&#x27;bold&#x27;, &#x27;italic&#x27;, &#x27;underline&#x27;, &#x27;strikeThrough&#x27;,&#x27;insertCode&#x27;,&#x27;emoticons&#x27;, &#x27;|&#x27;, &#x27;paragraphFormat&#x27;, &#x27;fontSize&#x27;, &#x27;color&#x27;, &#x27;|&#x27;, &#x27;align&#x27;, &#x27;formatOL&#x27;, &#x27;formatUL&#x27;, &#x27;outdent&#x27;, &#x27;indent&#x27;, &#x27;quote&#x27;, &#x27;-&#x27;, &#x27;insertLink&#x27;, &#x27;insertFile&#x27;, &#x27;insertImage&#x27;, &#x27;insertVideo&#x27;, &#x27;embedly&#x27;, &#x27;insertTable&#x27;, &#x27;|&#x27;, &#x27;insertHR&#x27;, &#x27;selectAll&#x27;, &#x27;clearFormatting&#x27;, &#x27;|&#x27;, &#x27;spellChecker&#x27;, &#x27;help&#x27;, &#x27;html&#x27;, &#x27;|&#x27;, &#x27;undo&#x27;, &#x27;redo&#x27;],</span><br><span class="line"></span><br><span class="line">        // upload file</span><br><span class="line">        imageUploadParam: &#x27;uploadname&#x27;,</span><br><span class="line">        imageUploadURL: &#x27;/admin/upload&#x27;,</span><br><span class="line">        fileUploadMethod: &#x27;POST&#x27;,</span><br><span class="line">        fileMaxSize: 20 * 1024 * 1024,</span><br><span class="line">        fileAllowedTypes: [&#x27;*&#x27;],</span><br><span class="line"></span><br><span class="line">        // upload image</span><br><span class="line">        imageUploadParam: &#x27;uploadname&#x27;,</span><br><span class="line">        imageUploadURL: &#x27;/admin/upload&#x27;,</span><br><span class="line">        imageUploadMethod: &#x27;POST&#x27;,</span><br><span class="line">        imageMaxSize: 5 * 1024 * 1024,</span><br><span class="line">        imageAllowedTypes: [&#x27;jpeg&#x27;, &#x27;jpg&#x27;, &#x27;png&#x27;, &#x27;gif&#x27;, &#x27;bmp&#x27;, &#x27;svg+xml&#x27;],</span><br><span class="line"></span><br><span class="line">        // upload video</span><br><span class="line">        imageUploadParam: &#x27;uploadname&#x27;,</span><br><span class="line">        imageUploadURL: &#x27;/admin/upload&#x27;,</span><br><span class="line">        videoUploadMethod: &#x27;POST&#x27;,</span><br><span class="line">        videoMaxSize: 50 * 1024 * 1024,</span><br><span class="line">        videoAllowedTypes: [&#x27;avi&#x27;, &#x27;mov&#x27;, &#x27;mp4&#x27;, &#x27;m4v&#x27;, &#x27;mpeg&#x27;, &#x27;mpg&#x27;, &#x27;wmv&#x27;, &#x27;ogv&#x27;],</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;)()</span><br><span class="line">&lt;/script&gt;</span><br></pre></td></tr></table></figure>
+
+<h4 id="上传图片到后端"><a href="#上传图片到后端" class="headerlink" title="上传图片到后端"></a>上传图片到后端</h4><p>需要注意后端返回的json url必须是 {“link”: “此次为图片地址”}</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line">//上传接口</span><br><span class="line">func (c *AdminController) Upload() &#123;</span><br><span class="line">   result := make(map[string]interface&#123;&#125;)</span><br><span class="line">   path := &quot;./static/upload/&quot; + time.Now().Format(&quot;2006/01/02&quot;)</span><br><span class="line">   if _, err := os.Stat(path); os.IsNotExist(err) &#123;</span><br><span class="line">      err := os.MkdirAll(path, os.ModeDir)</span><br><span class="line">      if err != nil &#123;</span><br><span class="line">         result[&quot;code&quot;] = 2</span><br><span class="line">         result[&quot;message&quot;] = &quot;上传异常&quot; + err.Error()</span><br><span class="line">         c.Data[&quot;json&quot;] = result</span><br><span class="line">         c.ServeJSON()</span><br><span class="line">         return</span><br><span class="line">      &#125;</span><br><span class="line">   &#125;</span><br><span class="line">   f, h, err := c.GetFile(&quot;uploadname&quot;)</span><br><span class="line">   img := &quot;&quot;</span><br><span class="line">   if err == nil &#123;</span><br><span class="line">      exStrArr := strings.Split(h.Filename, &quot;.&quot;)</span><br><span class="line">      exStr := strings.ToLower(exStrArr[len(exStrArr)-1])</span><br><span class="line">      if exStr != &quot;jpg&quot; &amp;&amp; exStr != &quot;png&quot; &amp;&amp; exStr != &quot;gif&quot; &#123;</span><br><span class="line">         result[&quot;code&quot;] = 1</span><br><span class="line">         result[&quot;message&quot;] = &quot;上传只能.jpg 或者png格式&quot;</span><br><span class="line">      &#125;</span><br><span class="line">      img = path + &quot;/&quot; + util.UniqueId() + &quot;.&quot; + exStr</span><br><span class="line">      err := c.SaveToFile(&quot;uploadname&quot;, img) // 保存位置在 static/upload, 没有文件夹要先创建</span><br><span class="line">      result[&quot;code&quot;] = 0</span><br><span class="line">      result[&quot;message&quot;] = &quot;上传成功&quot;</span><br><span class="line">      result[&quot;link&quot;] = strings.TrimLeft(img, &quot;.&quot;)</span><br><span class="line">      if err != nil &#123;</span><br><span class="line">         result[&quot;code&quot;] = 2</span><br><span class="line">         result[&quot;message&quot;] = &quot;上传异常&quot; + err.Error()</span><br><span class="line">      &#125;</span><br><span class="line">   &#125; else &#123;</span><br><span class="line">      result[&quot;code&quot;] = 2</span><br><span class="line">      result[&quot;message&quot;] = &quot;上传异常&quot; + err.Error()</span><br><span class="line">   &#125;</span><br><span class="line">   defer f.Close()</span><br><span class="line">   c.Data[&quot;json&quot;] = result</span><br><span class="line">   c.ServeJSON()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="我用到的css"><a href="#我用到的css" class="headerlink" title="我用到的css"></a>我用到的css</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">.code&#123;</span><br><span class="line">    display: block;</span><br><span class="line">    white-space: pre;</span><br><span class="line">    box-shadow: 0 1px 1px rgba(0,0,0,.075);</span><br><span class="line">    padding: 1em;</span><br><span class="line">    margin: .5em 0 2em;</span><br><span class="line">    overflow: auto;</span><br><span class="line">    -webkit-overflow-scrolling: touch;</span><br><span class="line">    max-width: 100%;</span><br><span class="line">    color: #090910;</span><br><span class="line">    background: #fbfbfd;</span><br><span class="line">    text-align: left;</span><br><span class="line">    word-spacing: normal;</span><br><span class="line">    word-break: normal;</span><br><span class="line">    word-wrap: normal;</span><br><span class="line">    -moz-tab-size: 4;</span><br><span class="line">    tab-size: 4;</span><br><span class="line">    -webkit-hyphens: none;</span><br><span class="line">    -ms-hyphens: none;</span><br><span class="line">    hyphens: none;</span><br><span class="line">    font-size: .8rem;</span><br><span class="line">    font-weight: 500;</span><br><span class="line">    line-height: 1.9;</span><br><span class="line">    font-family: Consolas,source-code-pro,monospace;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="最终效果图"><a href="#最终效果图" class="headerlink" title="最终效果图"></a>最终效果图</h4><p><img src="/beego%E5%8A%A0%E5%85%A5Froala%E5%AF%8C%E6%96%87%E6%9C%AC%E7%BC%96%E8%BE%91%E5%99%A8/383c9b755e5ef7779480f0079d407ce0.png" alt="img"></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Golang/" rel="tag"># Golang</a>
+              <a href="/tags/Beego/" rel="tag"># Beego</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2020/07/14/Redis%E8%BF%87%E6%9C%9F%E5%88%A0%E9%99%A4%E7%AD%96%E7%95%A5/" rel="prev" title="Redis过期删除策略">
+                  <i class="fa fa-chevron-left"></i> Redis过期删除策略
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2020/07/14/Laravel-%E9%98%9F%E5%88%97%E6%89%A7%E8%A1%8C%E9%A2%91%E7%8E%87%E9%99%90%E5%88%B6/" rel="next" title="Laravel 队列执行频率限制">
+                  Laravel 队列执行频率限制 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Jack Wong</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>

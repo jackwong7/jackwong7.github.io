@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha256-HtsXJanqjKTc8vVQjO4YMhiqFoXkfBsjBWcX91T1jr8=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"jackwong7.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.17.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="Slice变量本身指向3个东西，array，len，cap，array是一个指针，len是当前长度，cap是这个最大长度，当cap改变时会重新生成一个新的array指针">
+<meta property="og:type" content="article">
+<meta property="og:title" content="讲解一下Golang很多人不理解的Slice">
+<meta property="og:url" content="https://jackwong7.github.io/2020/07/14/%E8%AE%B2%E8%A7%A3%E4%B8%80%E4%B8%8BGolang%E5%BE%88%E5%A4%9A%E4%BA%BA%E4%B8%8D%E7%90%86%E8%A7%A3%E7%9A%84Slice/index.html">
+<meta property="og:site_name" content="JW-BLOG">
+<meta property="og:description" content="Slice变量本身指向3个东西，array，len，cap，array是一个指针，len是当前长度，cap是这个最大长度，当cap改变时会重新生成一个新的array指针">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://jackwong7.github.io/%E8%AE%B2%E8%A7%A3%E4%B8%80%E4%B8%8BGolang%E5%BE%88%E5%A4%9A%E4%BA%BA%E4%B8%8D%E7%90%86%E8%A7%A3%E7%9A%84Slice/159d1c826cdb02ea696f72ab84959290.png">
+<meta property="og:image" content="https://jackwong7.github.io/%E8%AE%B2%E8%A7%A3%E4%B8%80%E4%B8%8BGolang%E5%BE%88%E5%A4%9A%E4%BA%BA%E4%B8%8D%E7%90%86%E8%A7%A3%E7%9A%84Slice/f75dc324ca4e20bc73b47adb80948853.png">
+<meta property="og:image" content="https://jackwong7.github.io/%E8%AE%B2%E8%A7%A3%E4%B8%80%E4%B8%8BGolang%E5%BE%88%E5%A4%9A%E4%BA%BA%E4%B8%8D%E7%90%86%E8%A7%A3%E7%9A%84Slice/0fde8e784fe8b440979399a9d5a65ea7.png">
+<meta property="article:published_time" content="2020-07-14T08:52:43.000Z">
+<meta property="article:modified_time" content="2023-06-10T09:25:51.636Z">
+<meta property="article:author" content="Jack Wong">
+<meta property="article:tag" content="Golang">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://jackwong7.github.io/%E8%AE%B2%E8%A7%A3%E4%B8%80%E4%B8%8BGolang%E5%BE%88%E5%A4%9A%E4%BA%BA%E4%B8%8D%E7%90%86%E8%A7%A3%E7%9A%84Slice/159d1c826cdb02ea696f72ab84959290.png">
+
+
+<link rel="canonical" href="https://jackwong7.github.io/2020/07/14/%E8%AE%B2%E8%A7%A3%E4%B8%80%E4%B8%8BGolang%E5%BE%88%E5%A4%9A%E4%BA%BA%E4%B8%8D%E7%90%86%E8%A7%A3%E7%9A%84Slice/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://jackwong7.github.io/2020/07/14/%E8%AE%B2%E8%A7%A3%E4%B8%80%E4%B8%8BGolang%E5%BE%88%E5%A4%9A%E4%BA%BA%E4%B8%8D%E7%90%86%E8%A7%A3%E7%9A%84Slice/","path":"2020/07/14/讲解一下Golang很多人不理解的Slice/","title":"讲解一下Golang很多人不理解的Slice"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>讲解一下Golang很多人不理解的Slice | JW-BLOG</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">JW-BLOG</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">JW</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81%EF%BC%9A"><span class="nav-number">1.</span> <span class="nav-text">代码：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BB%A5%E4%B8%8B%E6%98%AF%E8%BF%90%E8%A1%8C%E7%BB%93%E6%9E%9C%EF%BC%9A"><span class="nav-number">2.</span> <span class="nav-text">以下是运行结果：</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Jack Wong</p>
+  <div class="site-description" itemprop="description">This is my blog</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">29</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">20</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://jackwong7.github.io/2020/07/14/%E8%AE%B2%E8%A7%A3%E4%B8%80%E4%B8%8BGolang%E5%BE%88%E5%A4%9A%E4%BA%BA%E4%B8%8D%E7%90%86%E8%A7%A3%E7%9A%84Slice/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Jack Wong">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="JW-BLOG">
+      <meta itemprop="description" content="This is my blog">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="讲解一下Golang很多人不理解的Slice | JW-BLOG">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          讲解一下Golang很多人不理解的Slice
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2020-07-14 16:52:43" itemprop="dateCreated datePublished" datetime="2020-07-14T16:52:43+08:00">2020-07-14</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2023-06-10 17:25:51" itemprop="dateModified" datetime="2023-06-10T17:25:51+08:00">2023-06-10</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>Slice变量本身指向3个东西，array，len，cap，array是一个指针，len是当前长度，cap是这个最大长度，当cap改变时会重新生成一个新的array指针</p>
+<span id="more"></span>
+
+<p><img src="/%E8%AE%B2%E8%A7%A3%E4%B8%80%E4%B8%8BGolang%E5%BE%88%E5%A4%9A%E4%BA%BA%E4%B8%8D%E7%90%86%E8%A7%A3%E7%9A%84Slice/159d1c826cdb02ea696f72ab84959290.png" alt="img"></p>
+<p><img src="/%E8%AE%B2%E8%A7%A3%E4%B8%80%E4%B8%8BGolang%E5%BE%88%E5%A4%9A%E4%BA%BA%E4%B8%8D%E7%90%86%E8%A7%A3%E7%9A%84Slice/f75dc324ca4e20bc73b47adb80948853.png" alt="img"></p>
+<p>当cap发生变化时，如下图所示</p>
+<p><img src="/%E8%AE%B2%E8%A7%A3%E4%B8%80%E4%B8%8BGolang%E5%BE%88%E5%A4%9A%E4%BA%BA%E4%B8%8D%E7%90%86%E8%A7%A3%E7%9A%84Slice/0fde8e784fe8b440979399a9d5a65ea7.png" alt="img"></p>
+<h4 id="代码："><a href="#代码：" class="headerlink" title="代码："></a><strong>代码：</strong></h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">package main</span><br><span class="line"></span><br><span class="line">import &quot;fmt&quot;</span><br><span class="line"></span><br><span class="line">func main() &#123;</span><br><span class="line"></span><br><span class="line">   s1 := []int&#123;1,2,3,4&#125;</span><br><span class="line">   s2 := s1 // s2 复制了 s1 的slice指针地址</span><br><span class="line">   fmt.Printf(&quot;s1=%v, s1 array pointer is %p, len(s1)=%d, cap(s1)=%d\n&quot;,s1,s1,len(s1),cap(s1))</span><br><span class="line">   fmt.Printf(&quot;s2=%v, s2 array pointer is %p, len(s2)=%d, cap(s2)=%d\n\n&quot;,s2,s2,len(s2),cap(s2))</span><br><span class="line"></span><br><span class="line">   s1 = append(s1,5) // 当修改了 s1 的cap长度时，s1 会拷贝一个新的slice出来</span><br><span class="line">   fmt.Printf(&quot;s1=%v, s1 array pointer is %p, len(s1)=%d, cap(s1)=%d\n&quot;,s1,s1,len(s1),cap(s1))</span><br><span class="line">   fmt.Printf(&quot;s2=%v, s2 array pointer is %p, len(s2)=%d, cap(s2)=%d\n\n&quot;,s2,s2,len(s2),cap(s2))</span><br><span class="line"></span><br><span class="line">   s2 = append(s2,6) // 当修改了 s2 的cap长度时，s2 会拷贝一个新的slice出来</span><br><span class="line">   fmt.Printf(&quot;s1=%v, s1 array pointer is %p, len(s1)=%d, cap(s1)=%d\n&quot;,s1,s1,len(s1),cap(s1))</span><br><span class="line">   fmt.Printf(&quot;s2=%v, s2 array pointer is %p, len(s2)=%d, cap(s2)=%d\n\n&quot;,s2,s2,len(s2),cap(s2))</span><br><span class="line"></span><br><span class="line">   s2 = append(s2,6) // 当只是增加/减少 s2 的len长度时，cap值不变，s2 指针后面的值会修改掉</span><br><span class="line">   fmt.Printf(&quot;s1=%v, s1 array pointer is %p, len(s1)=%d, cap(s1)=%d\n&quot;,s1,s1,len(s1),cap(s1))</span><br><span class="line">   fmt.Printf(&quot;s2=%v, s2 array pointer is %p, len(s2)=%d, cap(s2)=%d\n\n&quot;,s2,s2,len(s2),cap(s2))</span><br><span class="line"></span><br><span class="line">   s3 := s1[:3] // s3 只是拿了 s1 的指针，并修改了 len值，但是cap值不变 所以 s3 地址 等于 s1 地址</span><br><span class="line">   fmt.Printf(&quot;s1=%v, s1 array pointer is %p, len(s1)=%d, cap(s1)=%d\n&quot;,s1,s1,len(s1),cap(s1))</span><br><span class="line">   fmt.Printf(&quot;s2=%v, s2 array pointer is %p, len(s2)=%d, cap(s2)=%d\n&quot;,s2,s2,len(s2),cap(s2))</span><br><span class="line">   fmt.Printf(&quot;s3=%v, s3 array pointer is %p, len(s3)=%d, cap(s3)=%d\n\n&quot;,s3,s3,len(s3),cap(s3))</span><br><span class="line"></span><br><span class="line">   s3 = append(s3,7) // 当s3 修改了里面的值，s1 也会跟着改，但指针不变</span><br><span class="line">   fmt.Printf(&quot;s1=%v, s1 array pointer is %p, len(s1)=%d, cap(s1)=%d\n&quot;,s1,s1,len(s1),cap(s1))</span><br><span class="line">   fmt.Printf(&quot;s2=%v, s2 array pointer is %p, len(s2)=%d, cap(s2)=%d\n&quot;,s2,s2,len(s2),cap(s2))</span><br><span class="line">   fmt.Printf(&quot;s3=%v, s3 array pointer is %p, len(s3)=%d, cap(s3)=%d\n\n&quot;,s3,s3,len(s3),cap(s3))</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="以下是运行结果："><a href="#以下是运行结果：" class="headerlink" title="以下是运行结果："></a><strong>以下是运行结果：</strong></h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">s1=[1 2 3 4], s1 pointer is 0xc00000c360, len(s1)=4, cap(s1)=4</span><br><span class="line">s2=[1 2 3 4], s2 pointer is 0xc00000c360, len(s2)=4, cap(s2)=4</span><br><span class="line"></span><br><span class="line">s1=[1 2 3 4 5], s1 pointer is 0xc00000e2c0, len(s1)=5, cap(s1)=8</span><br><span class="line">s2=[1 2 3 4], s2 pointer is 0xc00000c360, len(s2)=4, cap(s2)=4</span><br><span class="line"></span><br><span class="line">s1=[1 2 3 4 5], s1 pointer is 0xc00000e2c0, len(s1)=5, cap(s1)=8</span><br><span class="line">s2=[1 2 3 4 6], s2 pointer is 0xc00000e300, len(s2)=5, cap(s2)=8</span><br><span class="line"></span><br><span class="line">s1=[1 2 3 4 5], s1 pointer is 0xc00000e2c0, len(s1)=5, cap(s1)=8</span><br><span class="line">s2=[1 2 3 4 6 6], s2 pointer is 0xc00000e300, len(s2)=6, cap(s2)=8</span><br><span class="line"></span><br><span class="line">s1=[1 2 3 4 5], s1 pointer is 0xc00000e2c0, len(s1)=5, cap(s1)=8</span><br><span class="line">s2=[1 2 3 4 6 6], s2 pointer is 0xc00000e300, len(s2)=6, cap(s2)=8</span><br><span class="line">s3=[1 2 3], s3 pointer is 0xc00000e2c0, len(s3)=3, cap(s3)=8</span><br><span class="line"></span><br><span class="line">s1=[1 2 3 7 5], s1 pointer is 0xc00000e2c0, len(s1)=5, cap(s1)=8</span><br><span class="line">s2=[1 2 3 4 6 6], s2 pointer is 0xc00000e300, len(s2)=6, cap(s2)=8</span><br><span class="line">s3=[1 2 3 7], s3 pointer is 0xc00000e2c0, len(s3)=4, cap(s3)=8</span><br></pre></td></tr></table></figure>
+
+<p>详细版可以参考：<a target="_blank" rel="noopener" href="https://blog.csdn.net/u010853261/article/details/99608199">https://blog.csdn.net/u010853261/article/details/99608199</a></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Golang/" rel="tag"># Golang</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2020/07/14/%E5%A6%82%E4%BD%95%E7%A0%B4%E8%A7%A3Navicat-15/" rel="prev" title="如何破解Navicat 15">
+                  <i class="fa fa-chevron-left"></i> 如何破解Navicat 15
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2020/07/14/Redis%E8%BF%87%E6%9C%9F%E5%88%A0%E9%99%A4%E7%AD%96%E7%95%A5/" rel="next" title="Redis过期删除策略">
+                  Redis过期删除策略 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Jack Wong</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>
