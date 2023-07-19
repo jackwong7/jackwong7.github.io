@@ -31,8 +31,8 @@ tags:
 
 ```
 #例如：
-update user_asset_1 set amount = amount – “100.00000”
-where user_id = 1 and asset_code = “USDT” and amount >= “100.00000”
+update user_asset_1 set amount = amount – "100.00000"
+where user_id = 1 and asset_code = "USDT" and amount >= "100.00000"
 ```
 
 如果decimal整数位+小数位超过16位（不含16），不能直接操作加减法（因为php带过去的都是字符串），需要修改一下sql
@@ -41,7 +41,7 @@ where user_id = 1 and asset_code = “USDT” and amount >= “100.00000”
 
 ```
 update user_asset_1 set amount = amount – cast('0.000000000000000001' as decimal(40,18)) 
-where user_id = 1 and asset_code = “USDT” and amount >= '0.000000000000000001';
+where user_id = 1 and asset_code = "USDT" and amount >= '0.000000000000000001';
 ```
 
 ### laravel常见db操作返回值：
