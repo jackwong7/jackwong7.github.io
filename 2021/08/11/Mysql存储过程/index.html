@@ -19,15 +19,15 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"jackwong7.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.17.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js"></script>
 
-    <meta name="description" content="用存储过程实现for循环执行sql语句&#x2F;&#x2F;默认情况下，DELIMITER是分号;。在MySQL中每行命令都是用“；”结尾，回车后自动执行，在存储过程中“；”往往不代表指令结束，马上运行，而DELIMITER原本就是“；”的意思，因此用这个命令转换一下“；”为“ ## ” ，这样只有收到“ ## ”才认为指令结束可以执行">
+    <meta name="description" content="用存储过程实现for循环执行sql语句&#x2F;&#x2F;默认情况下，DELIMITER是分号;。在MySQL中每行命令都是用”；”结尾，回车后自动执行，在存储过程中”；”往往不代表指令结束，马上运行，而DELIMITER原本就是”；”的意思，因此用这个命令转换一下”；”为” ## “ ，这样只有收到” ## “才认为指令结束可以执行">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Mysql存储过程">
 <meta property="og:url" content="https://jackwong7.github.io/2021/08/11/Mysql%E5%AD%98%E5%82%A8%E8%BF%87%E7%A8%8B/index.html">
 <meta property="og:site_name" content="JW-BLOG">
-<meta property="og:description" content="用存储过程实现for循环执行sql语句&#x2F;&#x2F;默认情况下，DELIMITER是分号;。在MySQL中每行命令都是用“；”结尾，回车后自动执行，在存储过程中“；”往往不代表指令结束，马上运行，而DELIMITER原本就是“；”的意思，因此用这个命令转换一下“；”为“ ## ” ，这样只有收到“ ## ”才认为指令结束可以执行">
+<meta property="og:description" content="用存储过程实现for循环执行sql语句&#x2F;&#x2F;默认情况下，DELIMITER是分号;。在MySQL中每行命令都是用”；”结尾，回车后自动执行，在存储过程中”；”往往不代表指令结束，马上运行，而DELIMITER原本就是”；”的意思，因此用这个命令转换一下”；”为” ## “ ，这样只有收到” ## “才认为指令结束可以执行">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2021-08-11T09:00:46.000Z">
-<meta property="article:modified_time" content="2023-06-10T09:28:08.548Z">
+<meta property="article:modified_time" content="2023-07-19T14:34:35.225Z">
 <meta property="article:author" content="Jack Wong">
 <meta property="article:tag" content="Mysql">
 <meta name="twitter:card" content="summary">
@@ -186,7 +186,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2023-06-10 17:28:08" itemprop="dateModified" datetime="2023-06-10T17:28:08+08:00">2023-06-10</time>
+      <time title="Modified: 2023-07-19 22:34:35" itemprop="dateModified" datetime="2023-07-19T22:34:35+08:00">2023-07-19</time>
     </span>
 
   
@@ -198,7 +198,7 @@
     
     
     
-    <div class="post-body" itemprop="articleBody"><p>用存储过程实现for循环执行sql语句<br>&#x2F;&#x2F;默认情况下，DELIMITER是分号;。在MySQL中每行命令都是用“；”结尾，回车后自动执行，在存储过程中“；”往往不代表指令结束，马上运行，而DELIMITER原本就是“；”的意思，因此用这个命令转换一下“；”为“ ## ” ，这样只有收到“ ## ”才认为指令结束可以执行</p>
+    <div class="post-body" itemprop="articleBody"><p>用存储过程实现for循环执行sql语句<br>&#x2F;&#x2F;默认情况下，DELIMITER是分号;。在MySQL中每行命令都是用”；”结尾，回车后自动执行，在存储过程中”；”往往不代表指令结束，马上运行，而DELIMITER原本就是”；”的意思，因此用这个命令转换一下”；”为” ## “ ，这样只有收到” ## “才认为指令结束可以执行</p>
 <span id="more"></span>
 
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">DELIMITER ##</span><br><span class="line">#创建新的函数</span><br><span class="line">CREATE PROCEDURE insertbatch()</span><br><span class="line">BEGIN</span><br><span class="line">	#定义变量 i</span><br><span class="line">    DECLARE	i INT;</span><br><span class="line">	#变量 i赋值 </span><br><span class="line">	SET i = 0;</span><br><span class="line">	WHILE i &lt; 10000 DO</span><br><span class="line">		#SQL语句</span><br><span class="line">		SET i = i + 1;</span><br><span class="line">	END WHILE;</span><br><span class="line">END</span><br><span class="line">##</span><br><span class="line"></span><br><span class="line">#调用函数</span><br><span class="line">CALL insertbatch() ##</span><br><span class="line"></span><br><span class="line">#删除</span><br><span class="line">DROP PROCEDURE insertbatch ##</span><br><span class="line"></span><br><span class="line">#最后改回 DELIMITER分隔符默认的;</span><br><span class="line">DELIMITER;</span><br></pre></td></tr></table></figure>
